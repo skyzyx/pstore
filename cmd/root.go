@@ -42,7 +42,9 @@ var rootCmd = &cobra.Command{
 	Short: "AWS Parameter Store Manager",
 	Long: `Simplifies working with Parameter Store via the AWS CLI and Terraform.
 
-Leverages the official AWS SDK under the hood, which means that all of the standard AWS CLI credential files and environment variables can be used to configure this tool. The default behavior is to allow the AWS SDK to determine the value from the environment.
+Leverages the official AWS SDK under the hood, which means that all of the standard AWS CLI credential files and
+environment variables can be used to configure this tool. The default behavior is to allow the AWS SDK to determine
+the value from the environment.
 
 Regular expression syntax can be found at https://github.com/google/re2/wiki/Syntax.`,
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
@@ -75,26 +77,16 @@ func init() {
 
 	rootCmd.Version = "2.0.0"
 
-	rootCmd.PersistentFlags().StringVar(&awsKey, "key", "",
-		"(Optional) The AWS Key ID to use for the request.")
-
-	rootCmd.PersistentFlags().StringVar(&secretKey, "secret", "",
-		"(Optional) The AWS Secret ID to use for the request.")
-
 	rootCmd.PersistentFlags().StringVar(&profile, "profile", "default",
 		"(Optional) The AWS CLI Profile to use for the request.")
 
-	rootCmd.PersistentFlags().StringVar(&region, "region", "us-east-1",
-		"(Optional) The AWS Region to use for the request.")
-
-	rootCmd.PersistentFlags().StringVar(&token, "token", "",
-		"(Optional) The AWS STS Token to use for the request.")
-
 	rootCmd.PersistentFlags().StringVarP(&filter, "filter", "f", "",
-		"(Optional) After the Parameter Store API call returns results, filter the names and values by substring match.")
+		"(Optional) After the Parameter Store API call returns results, filter the names and values " +
+		"by substring match.")
 
 	rootCmd.PersistentFlags().StringVarP(&regex, "regex", "r", "",
-		"(Optional) After the Parameter Store API call returns results, filter the names and values by RE2 regular expression.")
+		"(Optional) After the Parameter Store API call returns results, filter the names and values " +
+		"by RE2 regular expression.")
 }
 
 // initConfig reads in config file and ENV variables if set.

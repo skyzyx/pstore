@@ -17,7 +17,10 @@ TBD
 
 This step only needs to happen on first use, or when you have updated the code from this repository.
 
+Install the [Glide] package manager, install the dependencies, then build the app for the current OS.
+
 ```bash
+glide install
 make build
 ```
 
@@ -25,29 +28,42 @@ make build
 
 ## Running
 
-```bash
-pstore
-```
+### Configure Credentials
 
-<asciicast>
+The [AWS CLI Tools] and the various AWS SDKs already have a well-established pattern for managing credentials, so this software piggybacks on those existing patterns.
 
-By default, `pstore` leverages the credentials from the [AWS CLI Tools].
-
-### Pass the Key and Secret manually
-
-Using the `list` command as an example, and assuming you've installed and configured the [AWS CLI Tools](https://aws.amazon.com/cli/) at some point:
+If you've already set-up the AWS CLI Tools, you can set default credentials that way.
 
 ```bash
-pstore list \
-    --key AKIAJHJBEXAMPLEW7VJA \
-    --secret QIBAlwMNrzExampleG9iRf1ttflI0PDooExample
+aws configure
 ```
 
-If you are using multiple profiles, you can use a specific profile by passing the `--profile` flag.
+You can also create secondary profiles.
+
+```bash
+aws configure --profile production
+```
+
+### Configure Profile
+
+By default, `pstore` will use the _default_ credentials from `aws configure`. If you are using multiple profiles, you can use a specific profile by passing the `--profile` flag.
 
 ```bash
 pstore list --profile production
 ```
+
+### Manual Credentials
+
+If you would prefer to pass credentials manually, use the environment variables.
+
+```bash
+AWS_ACCESS_KEY_ID=AKIAJHJBEXAMPLEW7VJA \
+AWS_SECRET_ACCESS_KEY=QIBAlwMNrzExampleG9iRf1ttflI0PDooExample \
+AWS_DEFAULT_REGION=us-west-2 \
+pstore list
+```
+
+See [AWS CLI Configuration Variables](https://docs.aws.amazon.com/cli/latest/topic/config-vars.html) for more information.
 
 ## Parameters
 
@@ -122,6 +138,16 @@ Parameter Store’s built-in searching is pretty weak. If you have a key named `
   --regex "(?i)vpc-[0-9a-f]{8}"
   ```
 
+## Developing
+
+### Linter
+
+First, install the linting dependencies.
+
+```bash
+make lint
+```
+
 ## Troubleshooting
 
 ### Regexp Error: error parsing regexp
@@ -151,3 +177,4 @@ Parameter Store’s built-in searching is pretty weak. If you have a key named `
 Check your regular expression. The RE2 engine in Go is very similar to the PCRE expression engine supported by PHP, JavaScript, Ruby, and Perl. You can test your regular expression with [Regex Tester - Golang](https://regex-golang.appspot.com).
 
   [AWS CLI Tools]: https://aws.amazon.com/cli/
+  [Glide]: https://glide.sh

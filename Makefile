@@ -6,3 +6,7 @@ all:
 .PHONY: build
 build:
 	go build -v -ldflags="-s -w" -o pstore main.go
+
+.PHONY: lint
+lint:
+	gometalinter.v2 ./...

@@ -1,0 +1,15 @@
+package: github.com/skyzyx/pstore
+import:
+- package: github.com/aws/aws-sdk-go-v2
+  version: ~2.0.0-preview.4
+  subpackages:
+  - aws
+  - aws/external
+  - service/ssm
+- package: github.com/caarlos0/spin
+  version: ~1.1.0
+- package: github.com/olekukonko/tablewriter
+- package: github.com/spf13/cobra
+  version: ~0.0.3
+- package: gopkg.in/alecthomas/gometalinter.v2
+  version: ^2.0.5

@@ -1,0 +1,46 @@
+hash: d835448df1e0b64c713b3ceeeeee794881168d7115e9e33af8ddbc49f89ff77d
+updated: 2018-06-11T13:25:22.333261-07:00
+imports:
+- name: github.com/aws/aws-sdk-go-v2
+  version: ff1a530c31507c97cf5edbee226e604ca08661cc
+  subpackages:
+  - aws
+  - aws/awserr
+  - aws/defaults
+  - aws/ec2metadata
+  - aws/ec2rolecreds
+  - aws/endpointcreds
+  - aws/endpoints
+  - aws/external
+  - aws/signer/v4
+  - aws/stscreds
+  - internal/awsutil
+  - internal/sdk
+  - private/protocol
+  - private/protocol/json/jsonutil
+  - private/protocol/jsonrpc
+  - private/protocol/query
+  - private/protocol/query/queryutil
+  - private/protocol/rest
+  - private/protocol/xml/xmlutil
+  - service/ssm
+  - service/sts
+- name: github.com/caarlos0/spin
+  version: ac25467273ecdf236d2d83a25c5329d5863d375f
+- name: github.com/go-ini/ini
+  version: 06f5f3d67269ccec1fe5fe4134ba6e982984f7f5
+- name: github.com/inconshreveable/mousetrap
+  version: 76626ae9c91c4f2a10f34cad8ce83ea42c93bb75
+- name: github.com/jmespath/go-jmespath
+  version: c2b33e8439af944379acbdd9c3a5fe0bc44bd8a5
+- name: github.com/mattn/go-runewidth
+  version: ce7b0b5c7b45a81508558cd1dba6bb1e4ddb51bb
+- name: github.com/olekukonko/tablewriter
+  version: d4647c9c7a84d847478d890b816b7d8b62b0b279
+- name: github.com/spf13/cobra
+  version: ef82de70bb3f60c65fb8eebacbb2d122ef517385
+- name: github.com/spf13/pflag
+  version: 3ebe029320b2676d667ae88da602a5f854788a8a
+- name: gopkg.in/alecthomas/gometalinter.v2
+  version: 46cc1ea3778b247666c2949669a3333c532fa9c6
+testImports: []
