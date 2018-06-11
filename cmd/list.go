@@ -56,7 +56,8 @@ var listCmd = &cobra.Command{
 				r, err := regexp.Compile(regex)
 
 				if err != nil {
-					panic("Regexp Error: " + err.Error())
+					fmt.Println(err.Error())
+					os.Exit(1)
 				}
 
 				return r.MatchString(e)

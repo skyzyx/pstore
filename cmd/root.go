@@ -99,7 +99,8 @@ func initConfig() {
 func getConfig(profile string) aws.Config {
 	cfg, err := external.LoadDefaultAWSConfig(external.WithSharedConfigProfile(profile))
 	if err != nil {
-		panic("Unable to load AWS configuration: " + err.Error())
+		fmt.Println(err.Error())
+		os.Exit(1)
 	}
 
 	return cfg
@@ -112,7 +113,7 @@ func sendRequest(svc *ssm.SSM, args []string) {
 		path = args[0]
 	}
 
-	s := spin.New("Fetching %s")
+	s := spin.New("Fetching %s ")
 	s.Set(spin.Box2)
 	s.Start()
 	defer s.Stop()
@@ -132,7 +133,9 @@ func sendRequest(svc *ssm.SSM, args []string) {
 	}
 
 	if err := p.Err(); err != nil {
-		panic("SSM request failed: " + err.Error())
+		s.Stop()
+		fmt.Println(err.Error())
+		os.Exit(1)
 	}
 }
 

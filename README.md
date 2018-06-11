@@ -67,7 +67,7 @@ See [AWS CLI Configuration Variables](https://docs.aws.amazon.com/cli/latest/top
 
 ## Parameters
 
-For all commands, you can pass an _argument_ to the command line. This argument is the _path_ of the Parameter Store value that you want to see. The default value is `/`.
+For all commands, you can pass an _argument_ to the command line. This argument is the _path_ of the Parameter Store value that you want to see. The default value is `/` (root/all).
 
 ### `list`
 
@@ -150,31 +150,17 @@ make lint
 
 ## Troubleshooting
 
-### Regexp Error: error parsing regexp
+### error parsing regexp
 
-> ```plain
-> panic: Regexp Error: error parsing regexp: <error message>
-> 
-> goroutine 1 [running]:
-> github.com/skyzyx/pstore/cmd.glob..func2.2(0xc4203e7b80, 0x2, 0x2, 0x199c468)
->   /path/to/gocode/src/github.com/skyzyx/pstore/cmd/list.go:59 +0x1ac
-> github.com/skyzyx/pstore/cmd.arrayFilter(0xc4200f0800, 0xe4, 0x100, 0x15d3928, 0x81, 0xc4200f0800, 0x80)
->   /path/to/gocode/src/github.com/skyzyx/pstore/cmd/root.go:167 +0xe1
-> github.com/skyzyx/pstore/cmd.glob..func2(0x1979980, 0xc420122e80, 0x0, 0x2)
->   /path/to/gocode/src/github.com/skyzyx/pstore/cmd/list.go:54 +0x498
-> github.com/spf13/cobra.(*Command).execute(0x1979980, 0xc420122e20, 0x2, 0x2, 0x1979980, 0xc420122e20)
->   /path/to/gocode/src/github.com/spf13/cobra/command.go:766 +0x2c1
-> github.com/spf13/cobra.(*Command).ExecuteC(0x1979be0, 0x1979e40, 0x1979d30, 0xc42015bf48)
->   /path/to/gocode/src/github.com/spf13/cobra/command.go:852 +0x30a
-> github.com/spf13/cobra.(*Command).Execute(0x1979be0, 0xc42002c178, 0x0)
->   /path/to/gocode/src/github.com/spf13/cobra/command.go:800 +0x2b
-> github.com/skyzyx/pstore/cmd.Execute()
->   /path/to/gocode/src/github.com/skyzyx/pstore/cmd/root.go:66 +0x2d
-> main.main()
->   /path/to/gocode/src/github.com/skyzyx/pstore/main.go:21 +0x20
-> ```
+> error parsing regexp: <error message>
 
 Check your regular expression. The RE2 engine in Go is very similar to the PCRE expression engine supported by PHP, JavaScript, Ruby, and Perl. You can test your regular expression with [Regex Tester - Golang](https://regex-golang.appspot.com).
+
+### ValidationException: Parameter path: can't be prefixed with "aws" or "ssm"
+
+> ValidationException: Parameter path: can't be prefixed with "aws" or "ssm" (case-insensitive) except global parameter name path prefixed with "aws" (case-sensitive). It should always begin with / symbol.It consists of sub-paths divided by slash symbol; each sub-path can be formed as a mix of letters, numbers and the following 3 symbols .-_
+
+You may have tried to use a `*` or some other wildcard character for your `<path>` argument. The _path_ argument does not support wildcards. Use `--filter` or `--regex` instead.
 
   [AWS CLI Tools]: https://aws.amazon.com/cli/
   [Glide]: https://glide.sh
