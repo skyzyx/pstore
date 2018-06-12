@@ -1,2 +1,3 @@
 pstore
+pstore-*-amd64.*
 vendor/

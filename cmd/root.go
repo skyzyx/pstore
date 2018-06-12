@@ -27,14 +27,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var awsKey string
 var filter string
+var parameters [][]string
 var profile string
 var regex string
-var region string
 var response []*ssm.GetParametersByPathOutput
-var secretKey string
-var token string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -81,12 +78,12 @@ func init() {
 		"(Optional) The AWS CLI Profile to use for the request.")
 
 	rootCmd.PersistentFlags().StringVarP(&filter, "filter", "f", "",
-		"(Optional) After the Parameter Store API call returns results, filter the names and values " +
-		"by substring match.")
+		"(Optional) After the Parameter Store API call returns results, filter the names and values "+
+			"by substring match.")
 
 	rootCmd.PersistentFlags().StringVarP(&regex, "regex", "r", "",
-		"(Optional) After the Parameter Store API call returns results, filter the names and values " +
-		"by RE2 regular expression.")
+		"(Optional) After the Parameter Store API call returns results, filter the names and values "+
+			"by RE2 regular expression.")
 }
 
 // initConfig reads in config file and ENV variables if set.

@@ -27,8 +27,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var parameters [][]string
-
 // listCmd represents the list command
 var listCmd = &cobra.Command{
 	Use:   "list",
@@ -47,7 +45,7 @@ var listCmd = &cobra.Command{
 
 		if filter != "" {
 			parameters = arrayFilter(parameters, func(v []string) bool {
-				e := strings.Join(v, " ")
+				e := strings.Join([]string{v[0], v[1]}, " ")
 				return contains(e, filter)
 			})
 		} else if regex != "" {

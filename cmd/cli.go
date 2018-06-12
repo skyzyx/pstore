@@ -17,29 +17,100 @@ package cmd
 
 import (
 	"fmt"
+	"os"
+	"regexp"
+	"sort"
+	"strconv"
+	"strings"
+	"text/template"
 
+	// "github.com/davecgh/go-spew/spew"
 	"github.com/spf13/cobra"
 )
+
+type Parameter struct {
+	Profile string
+	Name    string
+	Type    string
+	Value   string
+}
+
+const tmpl = `aws ssm put-parameter \
+    --profile {{ .Profile }} \
+    --name "{{ .Name }}" \
+    --type {{ .Type }} \
+    --value "{{ .Value }}" \
+    --overwrite \
+;
+`
 
 // cliCmd represents the cli command
 var cliCmd = &cobra.Command{
 	Use:   "cli",
 	Short: "Export the selected Parameter Store values as AWS CLI commands.",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("cli called")
+		for _, page := range response {
+			for _, param := range page.Parameters {
+				parameters = append(parameters, []string{
+					*param.Name,
+					*param.Value,
+					string(param.Type),
+					strconv.FormatInt(*param.Version, 10),
+				})
+			}
+		}
+
+		if filter != "" {
+			parameters = arrayFilter(parameters, func(v []string) bool {
+				e := strings.Join([]string{v[0], v[1]}, " ")
+				return contains(e, filter)
+			})
+		} else if regex != "" {
+			parameters = arrayFilter(parameters, func(v []string) bool {
+				e := strings.Join([]string{v[0], v[1]}, " ")
+				r, err := regexp.Compile(regex)
+
+				if err != nil {
+					fmt.Println(err.Error())
+					os.Exit(1)
+				}
+
+				return r.MatchString(e)
+			})
+		}
+
+		if len(parameters) > 0 {
+			// Sort alphabetically by key
+			sort.Slice(parameters[:], func(i, j int) bool {
+				return parameters[i][0] < parameters[j][0]
+			})
+
+			for _, entry := range parameters {
+				construct := Parameter{
+					Profile: profile,
+					Name:    entry[0],
+					Value:   entry[1],
+					Type:    entry[2],
+				}
+
+				t := template.New("Parameter")
+
+				t, err := t.Parse(tmpl)
+				if err != nil {
+					fmt.Println(err.Error())
+					os.Exit(1)
+				}
+
+				err = t.Execute(os.Stdout, construct)
+				if err != nil {
+					fmt.Println(err.Error())
+					os.Exit(1)
+				}
+			}
+		}
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(cliCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// cliCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// cliCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
