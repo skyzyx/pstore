@@ -13,3 +13,5 @@ import:
   version: ~0.0.3
 - package: gopkg.in/alecthomas/gometalinter.v2
   version: ^2.0.5
+- package: github.com/goreleaser/goreleaser
+  version: ~0.77.2

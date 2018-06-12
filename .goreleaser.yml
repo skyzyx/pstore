@@ -1,0 +1,10 @@
+builds:
+  - binary: pstore
+    goos:
+      - windows
+      - darwin
+      - linux
+    goarch:
+      - amd64
+archive:
+  format: tar.gz

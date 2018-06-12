@@ -9,7 +9,20 @@ Easily list or export your AWS Parameter Store values.
 <b>Table of Contents</b>
 </summary>
 
-TBD
+* [Building](#building)
+* [Running](#running)
+    * [Configure Credentials](#configure-credentials)
+    * [Configure Profile](#configure-profile)
+    * [Manual Credentials](#manual-credentials)
+* [Parameters](#parameters)
+    * [list](#list)
+    * [cli](#cli)
+    * [Filtering](#filtering)
+* [Developing](#developing)
+    * [Linter](#linter)
+* [Troubleshooting](#troubleshooting)
+    * [error parsing regexp](#error-parsing-regexp)
+    * [ValidationException: Parameter path: can't be prefixed with "aws" or "ssm"](#validationexception-parameter-path-cant-be-prefixed-with-aws-or-ssm)
 
 </details>
 
