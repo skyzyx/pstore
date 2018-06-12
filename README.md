@@ -24,7 +24,7 @@ glide install
 make build
 ```
 
-<asciicast>
+[![asciicast](https://asciinema.org/a/186681.png)](https://asciinema.org/a/186681)
 
 ## Running
 
@@ -137,6 +137,8 @@ Parameter Store’s built-in searching is pretty weak. If you have a key named `
   ```bash
   --regex "(?i)vpc-[0-9a-f]{8}"
   ```
+
+[![asciicast](https://asciinema.org/a/186679.png)](https://asciinema.org/a/186679)
 
 ## Developing
 
