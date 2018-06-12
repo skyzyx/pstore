@@ -106,6 +106,8 @@ var cliCmd = &cobra.Command{
 					fmt.Println(err.Error())
 					os.Exit(1)
 				}
+
+                fmt.Println("")
 			}
 		}
 	},
