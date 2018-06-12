@@ -103,6 +103,7 @@ aws ssm put-parameter \
     --name "/awesome-app/staging/environment-name" \
     --type SecureString \
     --value "staging" \
+    --overwrite \
 ;
 
 aws ssm put-parameter \
@@ -110,6 +111,7 @@ aws ssm put-parameter \
     --name "/awesome-app/staging/project-name" \
     --type SecureString \
     --value "awesome-app" \
+    --overwrite \
 ;
 
 aws ssm put-parameter \
@@ -117,6 +119,7 @@ aws ssm put-parameter \
     --name "/awesome-app/staging/vpc-id" \
     --type SecureString \
     --value "vpc-abcd1234" \
+    --overwrite \
 ;
 ```
 
