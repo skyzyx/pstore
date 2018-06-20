@@ -13,6 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// pstore is a CLI app for working with AWS Parameter Store.
 package main
 
 import "github.com/skyzyx/pstore/cmd"

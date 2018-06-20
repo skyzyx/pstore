@@ -13,6 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// The core functions which support this CLI tool.
 package cmd
 
 import (
@@ -60,7 +61,7 @@ Regular expression syntax can be found at https://github.com/google/re2/wiki/Syn
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
-// This is called by main.main(). It only needs to happen once to the `rootCmd`.
+// This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
@@ -92,7 +93,7 @@ func initConfig() {
 
 // Using the SDK’s default configuration, loading additional config
 // and credentials values from the environment variables, shared
-// credentials, and shared configuration files
+// credentials, and shared configuration files.
 func GetConfig(profile string) aws.Config {
 	cfg, err := external.LoadDefaultAWSConfig(external.WithSharedConfigProfile(profile))
 	if err != nil {
@@ -103,7 +104,7 @@ func GetConfig(profile string) aws.Config {
 	return cfg
 }
 
-// Send the request to AWS, then stash the response into a variable.
+// Send the request to AWS, then stash the response into a global variable.
 func SendRequest(svc *ssm.SSM, args []string) {
 	path := "/"
 	if len(args) > 0 {
@@ -136,7 +137,7 @@ func SendRequest(svc *ssm.SSM, args []string) {
 	}
 }
 
-// Pluralize a noun based on its count
+// Pluralize a noun based on its count.
 func Plural(count int, singular string, plural string) string {
 	if count == 1 {
 		return fmt.Sprintf("%d %s", count, singular)
@@ -145,13 +146,13 @@ func Plural(count int, singular string, plural string) string {
 	return fmt.Sprintf("%d %s", count, plural)
 }
 
-// Case-insensitive `strings.Contains()`.
+// Case-insensitive strings.Contains().
 func Contains(a, b string) bool {
 	return strings.Contains(strings.ToUpper(a), strings.ToUpper(b))
 }
 
 // Returns a new slice containing all strings in the slice that satisfy
-// the predicate `f`.
+// the predicate f.
 func ArrayFilter(vs [][]string, f func([]string) bool) [][]string {
 	vsf := make([][]string, 0)
 
