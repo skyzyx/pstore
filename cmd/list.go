@@ -44,12 +44,12 @@ var listCmd = &cobra.Command{
 		}
 
 		if filter != "" {
-			parameters = arrayFilter(parameters, func(v []string) bool {
+			parameters = ArrayFilter(parameters, func(v []string) bool {
 				e := strings.Join([]string{v[0], v[1]}, " ")
-				return contains(e, filter)
+				return Contains(e, filter)
 			})
 		} else if regex != "" {
-			parameters = arrayFilter(parameters, func(v []string) bool {
+			parameters = ArrayFilter(parameters, func(v []string) bool {
 				e := strings.Join([]string{v[0], v[1]}, " ")
 				r, err := regexp.Compile(regex)
 
@@ -89,5 +89,5 @@ func init() {
 }
 
 func results() {
-	fmt.Printf("%s matched.\n", plural(len(parameters), "result", "results"))
+	fmt.Printf("%s matched.\n", Plural(len(parameters), "result", "results"))
 }

@@ -51,16 +51,16 @@ Regular expression syntax can be found at https://github.com/google/re2/wiki/Syn
 			fmt.Println("")
 
 			// Get AWS config for selected profile
-			cfg := getConfig(cmd.Flag("profile").Value.String())
+			cfg := GetConfig(cmd.Flag("profile").Value.String())
 			svc := ssm.New(cfg)
 
-			sendRequest(svc, args)
+			SendRequest(svc, args)
 		}
 	},
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
-// This is called by main.main(). It only needs to happen once to the rootCmd.
+// This is called by main.main(). It only needs to happen once to the `rootCmd`.
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
@@ -90,10 +90,10 @@ func init() {
 func initConfig() {
 }
 
-// Using the SDK's default configuration, loading additional config
+// Using the SDK’s default configuration, loading additional config
 // and credentials values from the environment variables, shared
 // credentials, and shared configuration files
-func getConfig(profile string) aws.Config {
+func GetConfig(profile string) aws.Config {
 	cfg, err := external.LoadDefaultAWSConfig(external.WithSharedConfigProfile(profile))
 	if err != nil {
 		fmt.Println(err.Error())
@@ -104,7 +104,7 @@ func getConfig(profile string) aws.Config {
 }
 
 // Send the request to AWS, then stash the response into a variable.
-func sendRequest(svc *ssm.SSM, args []string) {
+func SendRequest(svc *ssm.SSM, args []string) {
 	path := "/"
 	if len(args) > 0 {
 		path = args[0]
@@ -137,7 +137,7 @@ func sendRequest(svc *ssm.SSM, args []string) {
 }
 
 // Pluralize a noun based on its count
-func plural(count int, singular string, plural string) string {
+func Plural(count int, singular string, plural string) string {
 	if count == 1 {
 		return fmt.Sprintf("%d %s", count, singular)
 	}
@@ -145,14 +145,14 @@ func plural(count int, singular string, plural string) string {
 	return fmt.Sprintf("%d %s", count, plural)
 }
 
-// Case-insensitive strings.Contains().
-func contains(a, b string) bool {
+// Case-insensitive `strings.Contains()`.
+func Contains(a, b string) bool {
 	return strings.Contains(strings.ToUpper(a), strings.ToUpper(b))
 }
 
 // Returns a new slice containing all strings in the slice that satisfy
 // the predicate `f`.
-func arrayFilter(vs [][]string, f func([]string) bool) [][]string {
+func ArrayFilter(vs [][]string, f func([]string) bool) [][]string {
 	vsf := make([][]string, 0)
 
 	for _, v := range vs {

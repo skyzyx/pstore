@@ -61,12 +61,12 @@ var cliCmd = &cobra.Command{
 		}
 
 		if filter != "" {
-			parameters = arrayFilter(parameters, func(v []string) bool {
+			parameters = ArrayFilter(parameters, func(v []string) bool {
 				e := strings.Join([]string{v[0], v[1]}, " ")
-				return contains(e, filter)
+				return Contains(e, filter)
 			})
 		} else if regex != "" {
-			parameters = arrayFilter(parameters, func(v []string) bool {
+			parameters = ArrayFilter(parameters, func(v []string) bool {
 				e := strings.Join([]string{v[0], v[1]}, " ")
 				r, err := regexp.Compile(regex)
 
