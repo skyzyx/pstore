@@ -67,7 +67,7 @@ func init() {
 	cobra.OnInitialize(initConfig)
 	colorize = color.New(color.FgRed).PrintfFunc()
 
-	rootCmd.Version = "2.0.0"
+	rootCmd.Version = "2.1.0"
 
 	rootCmd.PersistentFlags().StringVar(&profile, "profile", "default",
 		"(Optional) The AWS CLI Profile to use for the request.")
