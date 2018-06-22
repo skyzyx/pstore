@@ -22,7 +22,8 @@ import (
 	"sort"
 	"strings"
 
-	// "github.com/davecgh/go-spew/spew"
+	"github.com/aws/aws-sdk-go-v2/service/ssm"
+	"github.com/davecgh/go-spew/spew"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 )
@@ -33,6 +34,14 @@ var listCmd = &cobra.Command{
 	Short: "List values stored in Parameter Store.",
 	Args:  cobra.MaximumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
+		if !quiet && !debug {
+			fmt.Println("")
+		}
+
+		// Fetch the data from AWS
+		cfg := GetConfig(cmd.Flag("profile").Value.String())
+		svc := ssm.New(cfg)
+		SendPathRequest(svc, args)
 
 		for _, page := range response {
 			for _, param := range page.Parameters {
@@ -45,7 +54,15 @@ var listCmd = &cobra.Command{
 
 		if filter != "" {
 			parameters = ArrayFilter(parameters, func(v []string) bool {
-				e := strings.Join([]string{v[0], v[1]}, " ")
+				searchString := []string{v[0], v[1]}
+				e := strings.Join(searchString, " ")
+
+				if debug {
+					colorize("Filterable string:")
+					colorize(spew.Sdump(e))
+					fmt.Println("")
+				}
+
 				return Contains(e, filter)
 			})
 		} else if regex != "" {
@@ -56,6 +73,12 @@ var listCmd = &cobra.Command{
 				if err != nil {
 					fmt.Println(err.Error())
 					os.Exit(1)
+				}
+
+				if debug {
+					colorize("Filterable string:")
+					colorize(spew.Sdump(e, r))
+					fmt.Println("")
 				}
 
 				return r.MatchString(e)

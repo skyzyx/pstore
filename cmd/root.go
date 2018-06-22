@@ -25,14 +25,20 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws/external"
 	"github.com/aws/aws-sdk-go-v2/service/ssm"
 	"github.com/caarlos0/spin"
+	"github.com/davecgh/go-spew/spew"
+	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
 
+var colorize func(format string, a ...interface{})
+var debug bool
 var filter string
 var parameters [][]string
 var profile string
+var quiet bool
 var regex string
 var response []*ssm.GetParametersByPathOutput
+var responseSingle *ssm.GetParameterOutput
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -45,19 +51,6 @@ environment variables can be used to configure this tool. The default behavior i
 the value from the environment.
 
 Regular expression syntax can be found at https://github.com/google/re2/wiki/Syntax.`,
-	PersistentPreRun: func(cmd *cobra.Command, args []string) {
-
-		// Don't execute for help
-		if cmd.Use != "help [command]" {
-			fmt.Println("")
-
-			// Get AWS config for selected profile
-			cfg := GetConfig(cmd.Flag("profile").Value.String())
-			svc := ssm.New(cfg)
-
-			SendRequest(svc, args)
-		}
-	},
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -72,6 +65,7 @@ func Execute() {
 // Initialize the shared flags that are valid across all commands.
 func init() {
 	cobra.OnInitialize(initConfig)
+	colorize = color.New(color.FgRed).PrintfFunc()
 
 	rootCmd.Version = "2.0.0"
 
@@ -85,6 +79,12 @@ func init() {
 	rootCmd.PersistentFlags().StringVarP(&regex, "regex", "r", "",
 		"(Optional) After the Parameter Store API call returns results, filter the names and values "+
 			"by RE2 regular expression.")
+
+	rootCmd.PersistentFlags().BoolVar(&debug, "debug", false,
+		"(Optional) Enable DEBUG logging.")
+
+	rootCmd.PersistentFlags().BoolVarP(&quiet, "quiet", "q", false,
+		"(Optional) Do not display any messages during the fetching of data.")
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -95,6 +95,12 @@ func initConfig() {
 // and credentials values from the environment variables, shared
 // credentials, and shared configuration files.
 func GetConfig(profile string) aws.Config {
+	if debug {
+		colorize("Configuration profile:")
+		colorize(spew.Sdump(profile))
+		fmt.Println("")
+	}
+
 	cfg, err := external.LoadDefaultAWSConfig(external.WithSharedConfigProfile(profile))
 	if err != nil {
 		fmt.Println(err.Error())
@@ -104,29 +110,58 @@ func GetConfig(profile string) aws.Config {
 	return cfg
 }
 
-// Send the request to AWS, then stash the response into a global variable.
-func SendRequest(svc *ssm.SSM, args []string) {
+// Send the request for a PS Path to AWS, then stash the response into a global variable.
+func SendPathRequest(svc *ssm.SSM, args []string) {
 	path := "/"
 	if len(args) > 0 {
 		path = args[0]
 	}
 
-	s := spin.New("Fetching %s ")
-	s.Set(spin.Box2)
-	s.Start()
-	defer s.Stop()
+	if debug {
+		colorize("Arguments:")
+		colorize(spew.Sdump(args))
+		fmt.Println("")
+	}
 
-	// Create the request object without executing it
-	request := svc.GetParametersByPathRequest(&ssm.GetParametersByPathInput{
+	s := spin.New("Fetching %s ")
+	if !quiet && !debug {
+		s.Set(spin.Box2)
+		s.Start()
+		defer s.Stop()
+	}
+
+	input := &ssm.GetParametersByPathInput{
 		MaxResults:     aws.Int64(10),
 		Path:           &path,
 		Recursive:      aws.Bool(true),
 		WithDecryption: aws.Bool(true),
-	})
+	}
+
+	if debug {
+		colorize("GetParametersByPathInput:")
+		colorize(spew.Sdump(input))
+		fmt.Println("")
+	}
+
+	// Create the request object without executing it
+	request := svc.GetParametersByPathRequest(input)
+
+	if debug {
+		colorize("GetParametersByPathRequest:")
+		colorize(spew.Sdump(request.Request.Config.Region))
+		colorize(spew.Sdump(request.Request.Config.Credentials))
+		fmt.Println("")
+	}
 
 	// Paginate the response
 	p := request.Paginate()
 	for p.Next() {
+		if debug {
+			colorize("Results Page:")
+			colorize(spew.Sdump(p.CurrentPage()))
+			fmt.Println("")
+		}
+
 		response = append(response, p.CurrentPage())
 	}
 
@@ -134,6 +169,67 @@ func SendRequest(svc *ssm.SSM, args []string) {
 		s.Stop()
 		fmt.Println(err.Error())
 		os.Exit(1)
+	}
+}
+
+// Send the request for a single PS value to AWS, then stash the response into a global variable.
+func SendSingleRequest(svc *ssm.SSM, args []string) {
+	path := ""
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		fmt.Println("The path to the Parameter Store key is mandatory. If you don't know the path, try `pstore list` first.")
+		os.Exit(1)
+	}
+
+	if debug {
+		colorize("Arguments:")
+		colorize(spew.Sdump(args))
+		fmt.Println("")
+	}
+
+	s := spin.New("Fetching %s ")
+	if !quiet && !debug {
+		s.Set(spin.Box2)
+		s.Start()
+		defer s.Stop()
+	}
+
+	input := &ssm.GetParameterInput{
+		Name:           &path,
+		WithDecryption: aws.Bool(true),
+	}
+
+	if debug {
+		colorize("GetParameterInput:")
+		colorize(spew.Sdump(input))
+		fmt.Println("")
+	}
+
+	// Create the request object without executing it
+	request := svc.GetParameterRequest(input)
+
+	if debug {
+		colorize("GetParameterRequest:")
+		colorize(spew.Sdump(request.Request.Config.Region))
+		colorize(spew.Sdump(request.Request.Config.Credentials))
+		fmt.Println("")
+	}
+
+	// Fetch the response
+	var err error
+	responseSingle, err = request.Send()
+
+	if err != nil {
+		s.Stop()
+		fmt.Println(err.Error())
+		os.Exit(1)
+	}
+
+	if debug {
+		colorize("Results:")
+		colorize(spew.Sdump(responseSingle))
+		fmt.Println("")
 	}
 }
 

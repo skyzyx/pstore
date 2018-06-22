@@ -15,3 +15,9 @@ import:
   version: ^2.0.5
 - package: github.com/goreleaser/goreleaser
   version: ~0.77.2
+- package: github.com/davecgh/go-spew
+  version: ^1.1.0
+  subpackages:
+  - spew
+- package: github.com/fatih/color
+  version: ^1.7.0

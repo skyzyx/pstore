@@ -1,5 +1,5 @@
-hash: 0e4aeb8c53a7af2e779ac3b0e3e97e43df05c5fe498825530e69143c0b8d84f9
-updated: 2018-06-12T00:00:40.953484-07:00
+hash: 62e1c38e6ae641a5e99f60e01c27d8306ab0d09ccd91f04c95c347e205d2b45b
+updated: 2018-06-22T10:23:46.711468-07:00
 imports:
 - name: github.com/aws/aws-sdk-go-v2
   version: ff1a530c31507c97cf5edbee226e604ca08661cc
@@ -27,10 +27,16 @@ imports:
   - service/sts
 - name: github.com/caarlos0/spin
   version: ac25467273ecdf236d2d83a25c5329d5863d375f
+- name: github.com/davecgh/go-spew
+  version: 346938d642f2ec3594ed81d874461961cd0faa76
+  subpackages:
+  - spew
+- name: github.com/fatih/color
+  version: 5b77d2a35fb0ede96d138fc9a99f5c9b6aef11b4
 - name: github.com/go-ini/ini
   version: 06f5f3d67269ccec1fe5fe4134ba6e982984f7f5
 - name: github.com/goreleaser/goreleaser
-  version: e86f3ddad65b039e2739a7b75bf88f1993427d0d
+  version: 411a73d410c3f87b2040636b49458e7b3abd0224
 - name: github.com/inconshreveable/mousetrap
   version: 76626ae9c91c4f2a10f34cad8ce83ea42c93bb75
 - name: github.com/jmespath/go-jmespath

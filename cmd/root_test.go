@@ -19,14 +19,14 @@ func ExampleGetConfig() {
 	cfg := GetConfig(cmd.Flag("profile").Value.String())
 	svc := ssm.New(cfg)
 
-	SendRequest(svc, args)
+	SendPathRequest(svc, args)
 }
 
-func ExampleSendRequest() {
+func ExampleSendPathRequest() {
 	cfg := GetConfig(cmd.Flag("profile").Value.String())
 	svc := ssm.New(cfg)
 
-	SendRequest(svc, args)
+	SendPathRequest(svc, args)
 }
 
 func ExamplePlural() {
