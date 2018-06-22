@@ -136,6 +136,18 @@ aws ssm put-parameter \
 ;
 ```
 
+### `get`
+
+```bash
+pstore --profile=staging get /awesome-app/staging/project-name
+```
+
+An example response looks like:
+
+```plain
+awesome-app
+```
+
 ### Filtering
 
 Parameter Store’s built-in searching is pretty weak. If you have a key named `/awesome-app/staging/vpc-id`, passing `/awesome-app/` or `/awesome-app/staging/` as the `path` parameter will return results. However, passing `/awesome-app/staging/vpc` will return zero results. This is because Parameter Store can only match on path fragments delimited with a `/` character.
